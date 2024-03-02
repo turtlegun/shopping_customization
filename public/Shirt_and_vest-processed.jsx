@@ -7,7 +7,7 @@ import base from './texture/shirt/cotton.jpg'
 import base2 from './texture/shirt/cotton2.jpg'
 import shirt1 from './texture/shirt/shirt_material.jpg'
 import normal from  './texture/shirt/Leather_008_Normal.jpg'
- 
+ import goku from './goku.jpg'
 import rough from './texture/shirt/Leather_008_Roughness.jpg'
 
 import aomap from './texture/shirt/Leather_008_Ambient Occlusion.jpg'
@@ -19,12 +19,17 @@ export default function Model(props) {
 console.log(select_value)
 
 let shirtTextureMaterialProps = useTexture({
-  map: shirt1,
+  map: goku,
 
   
 })
 
 
+let shirtTextureMaterialProps1 = useTexture({
+  map: goku,
+
+  
+})
 
 if(select_value==='option1'){
  shirtTextureProps = useTexture({
@@ -50,7 +55,11 @@ if(select_value==='option1'){
       <group scale={0.09}  >
       
 
-        <mesh material-color={props.customcolor.vest} geometry={nodes.vest_vest2_0.geometry} material={materials.vest2} />
+        <mesh material-color={props.customcolor.vest} geometry={nodes.vest_vest2_0.geometry} material={materials.vest2} >
+         
+           <meshStandardMaterial {... shirtTextureMaterialProps } />  
+          </mesh>
+
         <mesh material-color={props.customcolor.vest} geometry={nodes.vest_vest1_0.geometry} material={materials.vest1} />
         <mesh material-color={props.customcolor.button} geometry={nodes.buttom3_buttom_0.geometry} material={materials.buttom} />
         <mesh material-color={props.customcolor.button} geometry={nodes.buttom4_buttom_0.geometry} material={materials.buttom} />
