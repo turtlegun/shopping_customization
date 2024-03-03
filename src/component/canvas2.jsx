@@ -1,4 +1,5 @@
 import { Canvas } from "@react-three/fiber";
+
 import styles from './canvas1.module.css'
 import { Suspense, useState } from "react";
 import { ContactShadows, Environment, OrbitControls } from "@react-three/drei";
@@ -27,19 +28,19 @@ function Canvas2() {
     
   };
 
+  
     return ( <>
     
     <Canvas  camera={{ position: [-10, 0, -10], fov: 55 }}
-    style={{ width: '100%', height: '70vh' }}
-    
+    style={{ width: '100%', height: '70vh',backgroundColor:'wheat' }}
     >
-      <color attach="background" args={["#213547"]}/>
     <pointLight position={[10, 10, 10]} intensity={1.5} />
     <Suspense fallback={null}>
         <group rotation={[0, Math.PI, 0]} position={[0, 0, 0]}>
-<Shirt  choice={selectedValue}/>
+<Shirt choice={selectedValue}/>
 </group>
-       
+      
+
       </Suspense>
 
 
@@ -57,6 +58,8 @@ function Canvas2() {
       <button className="dropdown-toggle" onClick={handleOptionSelect2 }>
       naruto
       </button>
+
+
     
     </> );
 }
