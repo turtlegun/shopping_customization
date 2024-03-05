@@ -2,10 +2,10 @@ import { Canvas } from "@react-three/fiber";
 
 import styles from './canvas1.module.css'
 import { Suspense, useRef, useState } from "react";
-import { ContactShadows, Environment, OrbitControls } from "@react-three/drei";
+import { ContactShadows, Environment, OrbitControls, PresentationControls, Stage } from "@react-three/drei";
 import Shirt from '../../public/Shirt'
 import Customization from "./customization";
-
+import style from './canvas3.module.css'
 
 function Canvas2(props) {
 
@@ -32,7 +32,7 @@ function Canvas2(props) {
  
   const [selectedValue, setSelectedValue] = useState('goku');
 
-  
+  const [color,setColor]=useState('white')
  
 
   // Handle selection of an option
@@ -84,19 +84,29 @@ function Canvas2(props) {
 */
   
     return ( <>
-    
+    <div className={style.app}>
     <Canvas  camera={{ position: [-10, 0, -10], fov: 55 }}
-    style={{ width: '100%', height: '70vh',backgroundColor:'wheat' }}
+    
     
    // onMouseMove={handleMouseMove}
     onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         ref={canvasRef}
     >
+       
+         <PresentationControls
+        speed={1.5}
+        global
+        polar={[-0.1, Math.PI / 4]}
+        rotation={[Math.PI / 8, Math.PI / 4, 0]}
+      ></PresentationControls>
+       <color attach="background" args={["#213547"]} />
+          <fog attach="fog" args={["#213547", 10, 20]} />
+          <ambientLight/>
     <pointLight position={[10, 10, 10]} intensity={1.5} />
     <Suspense fallback={null}>
         <group rotation={[0, Math.PI, 0]} position={[0, 0, 0]}>
-<Shirt choice={selectedValue} image={image} position={decalPosition} />
+<Shirt choice={selectedValue} image={image} position={decalPosition} color={color} />
 </group>
       
 
@@ -107,7 +117,7 @@ function Canvas2(props) {
       <OrbitControls  />
     </Canvas>
     
-
+<div className={style.customization} >
     <button className="dropdown-toggle" onClick={handleOptionSelect }>
         Goku
       </button>
@@ -121,7 +131,16 @@ function Canvas2(props) {
       <div /*</>className={styles.customization}*/>
 <input type='file' onChange={handleimage}/>
 </div>
-    
+<div>
+            <h2> shirt   color </h2>
+            <input type="button" id="mesh" name="vest" className={styles.shirt} onClick={(e) => setColor('yellow')} />
+            <input type="button" id="mesh" name="vest" className={styles.shirt1} onClick={(e) => setColor('red')} />
+            <input type="button" id="mesh" name="vest" className={styles.shirt2} onClick={(e) => setColor('blue')} />
+            <input type="button" id="mesh" name="vest" className={styles.shirt3} onClick={(e) => setColor('green')} />
+          </div>
+
+</div>
+</div>  
     </> );
 }
 

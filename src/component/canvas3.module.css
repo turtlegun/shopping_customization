@@ -8,5 +8,18 @@
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
+    
+
+}
+.customization{
+
+    position: fixed;
+    right: 24px;
+    bottom: 25vh;
+    width: 360px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
 }

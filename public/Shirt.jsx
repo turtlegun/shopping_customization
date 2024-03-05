@@ -96,9 +96,9 @@ else{
   
 
   return (
-    <group {...props} scale={[16, 16, 16]}>
+    <group {...props} scale={[10, 10, 10]}>
       
-      <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1}>
+      <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
         <Decal
           position={decal} // Adjust position as needed
           rotation={[0,0,0]} // No rotation
