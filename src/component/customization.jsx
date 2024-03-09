@@ -1,13 +1,13 @@
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import style from './customization.module.css'
-import Canvas3 from './canvas3';
-import Canvas2 from './canvas2';
+import   context  from './canvas3';
+
 
 
 function Customization() {
 
-    const [image,setImage]=useState(null)
+
 
 
 const handleimage=(event)=>{

@@ -7,6 +7,8 @@ import Shirt from '../../public/Shirt'
 import Customization from "./customization";
 import style from './canvas3.module.css'
 
+import Tshirt from '../../public/Tshirt'
+
 function Canvas2(props) {
 
   const canvasRef = useRef();
@@ -85,7 +87,7 @@ function Canvas2(props) {
   
     return ( <>
     <div className={style.app}>
-    <Canvas  camera={{ position: [-10, 0, -10], fov: 55 }}
+    <Canvas  camera={{ position: [-10, 0, -10], fov: 55 } } 
     
     
    // onMouseMove={handleMouseMove}
@@ -100,13 +102,12 @@ function Canvas2(props) {
         polar={[-0.1, Math.PI / 4]}
         rotation={[Math.PI / 8, Math.PI / 4, 0]}
       ></PresentationControls>
-       <color attach="background" args={["#213547"]} />
-          <fog attach="fog" args={["#213547", 10, 20]} />
+     
           <ambientLight/>
     <pointLight position={[10, 10, 10]} intensity={1.5} />
     <Suspense fallback={null}>
         <group rotation={[0, Math.PI, 0]} position={[0, 0, 0]}>
-<Shirt choice={selectedValue} image={image} position={decalPosition} color={color} />
+<Shirt choice={selectedValue} image={image} position={decalPosition} color={color}  className={style.canvas}/>
 </group>
       
 
