@@ -1,6 +1,7 @@
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import style from './material.module.css'
+import { Context5 } from './canvas3';
 
 
 function Material_input() {
@@ -8,7 +9,9 @@ function Material_input() {
 
 const [toogle,setToogle]=useState(false)
 
-const material=()=>{
+const [material,setMaterial]=useContext(Context5)
+
+const material1=()=>{
 
 
     setToogle((prevState) => !prevState);
@@ -16,20 +19,32 @@ const material=()=>{
 
 }
 
+
+const cotton=()=>{
+
+setMaterial("cotton")
+
+}
+
+const polyster=()=>{
+
+    setMaterial("polyster")
+}
+
     return ( <>
     
 <div className={style.material}>
 
-    <b onClick={material}>Material</b> &nbsp;&nbsp;
+    <b onClick={material1}>Material</b> &nbsp;&nbsp;
     
     {toogle&&(
 <div className={style.material_list}>
 
 <ul>
-<li>
+<li onClick={cotton}>
     cotton
 </li>
-<li>
+<li onClick={polyster}>
 polyster
 
 </li>

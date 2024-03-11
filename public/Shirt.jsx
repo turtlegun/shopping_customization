@@ -17,7 +17,7 @@ export default function Model(props) {
   const { nodes, materials } = useGLTF('/shirt.glb');
   const [pos, setPos] = useState([0, 1.8, 1]);
   const [rotation, setRotation] = useState([0, 0, 0]);
-  const [scale1, setScale] = useState([0.10, 0.10, 0.10]);
+  const [image_size, setScale] = useState([0.10, 0.10, 0.10]);
   const [isDragging, setIsDragging] = useState(false);
   const canvasRef = useRef(null);
   const decalRef = useRef(null);
@@ -26,16 +26,33 @@ export default function Model(props) {
   
   const [decal_selected,setDecal_selected] = useContext(Context2);
   const[text_selected,setText_selected]= useContext(Context3);
+  const[se_sel,setSe]=useState(false)
+
+  const [tex_sel,setTex]=useState(false)
+
+  const [font_size, setFont_size] = useState(0.05);
 let text=props.text
 console.log(text)
 
 
-  let textureprops = useTexture({
+
+let material_inp=props.material
+let textureprops 
+if(material_inp=="cotton"){
+   textureprops = useTexture({
     map: cotton,
-  });
+  });}
+
+else{
+
+  textureprops = useTexture({
+    map: polyster,})
+
+}
+
 
   useControls({
-    scale: {
+    image_size: {
       min: 0.1,
       max: 2,
       value: 0.10,
@@ -45,27 +62,52 @@ console.log(text)
       },
     },
   });
+  
+
+
+  useControls({
+    font_size: {
+      value: 0.05,
+      min: 0.01,
+      max: 0.5,
+      step: 0.01,
+      onChange: (value) => {
+        setFont_size(value);
+      },
+    },
+  });
 
   let decal = props.position ? props.position : [0, 0.04, 0.10];
   let selectedValue = props.choice;
-
+  
+  
+  let text_pos = props.text_position ? props.text_position : [0, 0.05, 0.11];
+  console.log(text_pos)
 
   
   let logoTexture = props.image ? useTexture(props.image) : useTexture(goku)
   
   const handleDecalMouseDown = (event) => {
-    setDecal_selected((prevState) => !prevState);
+    setSe(prevState => !prevState)
+    setDecal_selected(se_sel);
     event.stopPropagation(); 
     console.log("decal selected")
   };
 
-  const text_select=()=>{
-    setText_selected(true);
+  const text_select=(event)=>{
+    setTex(prevState => !prevState)
+    setText_selected(tex_sel);
     event.stopPropagation(); 
     console.log("text selected")
 
 
   }
+  
+
+let font ="italic"
+
+let color="red"
+
   
   return (
     
@@ -74,22 +116,22 @@ console.log(text)
         <Decal
           position={decal}
           rotation={[0, 0, 0]}
-          scale={scale1}
+          scale={image_size}
           map={logoTexture}
           onClick={handleDecalMouseDown}
         
           ref={decalRef}
         />
         <Text
-          position={[0, 0.07, 0.05]} 
-          fontSize={0.05} 
+          position={text_pos} 
+          fontSize={font_size} 
           ref={textRef}
-          color="black"
-         
+          color={props.color_text}
+          onClick={text_select}
+          style={{ fontFamily:font ,fontStyle: 'italic'}}
+          font={font}
         >
-          <Html>
-         <h2 style={{ fontFamily: "Ojuju, sans-serif"}} onClick={text_select}> {text } </h2>
-         </Html>
+         {text}
         </Text>
         <meshStandardMaterial {...textureprops} />
       </mesh>

@@ -1,14 +1,14 @@
 import { useContext, useRef, useState } from 'react';
 import style from './canvas3.module.css'
 import logo_input from "../assets/Upload-icon.svg";
-import   {Context}  from './canvas3';
+import   {Context, Context4}  from './canvas3';
 import   {Context1}  from './canvas3';
 
 function Upload() {
   const inputRef=useRef()
   const [image, setImage] = useContext(Context); // Destructure image from Context
   const [text, setText] = useContext(Context1); 
-    
+    const[color_text,setColor_text]=useContext(Context4)
     const[input_text,setInput_text]=useState()
     const[position,setPosition]=useState({ x: 0, y: 0 })
     const handleimage = (event) => {
@@ -41,7 +41,65 @@ setText(e.target.value)
         <h2>Write text</h2>
 
         <input type='text' onChange={text_input}/>
-      
+        <div className={style.color_container}>
+        <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt}
+            onClick={(e) => setColor_text("yellow")}
+          />
+          <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt1}
+            onClick={(e) => setColor_text("red")}
+          />
+          <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt2}
+            onClick={(e) => setColor_text("blue")}
+          />
+          <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt3}
+            onClick={(e) => setColor_text("green")}
+          />
+          <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt4}
+            onClick={(e) => setColor_text("purple")}
+          />
+           <br></br>
+          <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt5}
+            onClick={(e) => setColor_text("black")}
+          />
+          <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt6}
+            onClick={(e) => setColor_text("grey")}
+          />
+          <input
+            type="button"
+            id="mesh"
+            name="vest"
+            className={style.shirt7}
+            onClick={(e) => setColor_text("white")}
+          />
+          </div>
       </div>
      
      );
