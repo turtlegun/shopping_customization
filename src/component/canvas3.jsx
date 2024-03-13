@@ -13,6 +13,9 @@ import T_shirt_demo from '../../public/T_shirt_Demo'
 import style from "./canvas3.module.css";
 import Upload from "./upload";
 import Material_input from "./material";
+import { PointLight, SpotLight } from "three";
+
+
 
 
 export const Context=React.createContext();
@@ -30,7 +33,7 @@ function Canvas3() {
   const [decalPosition, setDecalPosition] = useState([0, 0.04, 0.15]);
   const[text_selected,setText_selected]=useState(false)
   const [color_text, setColor_text] = useState("white");
-const [text,setText]=useState("")
+const [text,setText]=useState("hello")
 const[color,setColor]=useState("white")
 const[text_pos,setText_pos]=useState([0, 0.04, 0.15]);
 
@@ -127,13 +130,7 @@ const handleMouseDown3=()=>{
       >
         
       
-        <spotLight
-          intensity={1}
-          angle={0.1}
-          penumbra={1}
-          position={[1, 1, 1]}
-          castShadow
-        />
+     
         <ContactShadows
           resolution={512}
           position={[0, 4, 5]}
@@ -142,11 +139,13 @@ const handleMouseDown3=()=>{
           blur={2}
           far={0.8}
         />
-       <Environment preset="studio" background blur={0.5} />
+       <Environment preset="city"/>
         <Suspense fallback={null}>
         <Shirt color={color} position={decalPosition} image={image} text={text} text_position={text_pos} color_text={color_text} material={material}/>
         </Suspense>
         
+
+        <pointLight position={[15, 15, 15]} />
         <OrbitControls
           enableDamping={true} // Enable damping for smooth movement
           dampingFactor={0.1}

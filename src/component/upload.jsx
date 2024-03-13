@@ -27,8 +27,14 @@ setText(e.target.value)
 
 
     }
-
+    const [selectedOption, setSelectedOption] = useState('');
    
+
+    const handleSelectChange = (event) => {
+      setSelectedOption(event.target.value);
+    };
+  
+
     return ( 
 
 
@@ -100,6 +106,21 @@ setText(e.target.value)
             onClick={(e) => setColor_text("white")}
           />
           </div>
+
+<div>
+
+<h2>Font Family</h2>
+<select value={selectedOption} onChange={handleSelectChange} >
+        <option value="">{selectedOption}</option>
+        <option value="apple">Roboto</option>
+        <option value="banana">Oswald</option>
+        <option value="orange">Ojuju</option>
+        <option value="grape">Montserrat</option>
+        <option value="grape">Madimi_One</option>
+      </select>
+      <h2>Font style</h2>
+</div>
+
       </div>
      
      );

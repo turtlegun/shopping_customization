@@ -9,8 +9,9 @@ import polyster from './polyster.jpg';
 import { useControls } from "leva";
 import { Text } from '@react-three/drei'; // Import Text component
 import { Context2, Context3 } from '../src/component/canvas3';
-
-
+import font from './Oswald/static/Oswald-Bold.ttf'
+import { degToRad } from "three/src/math/MathUtils.js";
+import * as THREE from 'three';
 
 export default function Model(props) {
 
@@ -30,6 +31,9 @@ export default function Model(props) {
 
   const [tex_sel,setTex]=useState(false)
 
+
+  const [pos2, setPos2] = useState([0, 1.8, 1]);
+  const [rotation2, setRotation2] = useState([0, 0, 0]);
   const [font_size, setFont_size] = useState(0.05);
 let text=props.text
 console.log(text)
@@ -52,6 +56,35 @@ else{
 
 
   useControls({
+ 
+    angle: {
+      min: degToRad(0),
+      max: degToRad(360),
+      value: Math.PI / 4,
+      step: 0.01,
+      onChange: (value) => {
+        const x = Math.sin(value);
+        const z = Math.cos(value);
+        const rot = Math.atan2(z, x);
+        setRotation2(() => [0, 0, rot]);
+       
+      },
+    },
+  /* 
+    angle2: {
+      min: degToRad(60),
+      max: degToRad(300),
+      value: Math.PI / 4,
+      step: 0.01,
+      onChange: (value) => {
+        const x1 = Math.cos(value);
+        const z1 = Math.sin(value);
+        const rot1 = Math.atan2(z1, x1); // Adjusted for rotation around y-axis
+        setRotation2(() => [0, rot1, 0]); // Setting rotation around y-axis
+        setPos2((pos) => [x1, pos[1], z1]);
+      },
+    },
+   */
     image_size: {
       min: 0.1,
       max: 2,
@@ -102,37 +135,53 @@ else{
 
 
   }
-  
+  let color=props.color_text
 
-let font ="italic"
+  const generateTexture = (text,text_color) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const fontSize = 40;
+    const fontFamily = font;
+    const canvasWidth = 200; // Adjust this based on your text length or requirement
+    const canvasHeight = 50; // Adjust this based on your text size or requirement
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    context.fillStyle = text_color; // Dynamically set the color to red
+    context.font = `${fontSize}px ${fontFamily}`;
+    context.textBaseline = 'middle';
+    context.textAlign = 'center';
+    context.fillText(text, canvasWidth / 2, canvasHeight / 2);
+    return new THREE.CanvasTexture(canvas);
+  };
 
-let color="red"
+  const initialTexture = generateTexture(text,color);
 
-  
+
+
   return (
     
     <group {...props} scale={[5, 5, 5]} position={[0, 2, 0]} ref={canvasRef}>
       <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
         <Decal
-          position={decal}
-          rotation={[0, 0, 0]}
-          scale={image_size}
-          map={logoTexture}
-          onClick={handleDecalMouseDown}
+          position={text_pos}
+          rotation={rotation2}
+          scale={font_size}
+          map={initialTexture}
+          onClick={text_select}
+          
         
           ref={decalRef}
         />
-        <Text
-          position={text_pos} 
-          fontSize={font_size} 
-          ref={textRef}
-          color={props.color_text}
-          onClick={text_select}
-          style={{ fontFamily:font ,fontStyle: 'italic'}}
-          font={font}
-        >
-         {text}
-        </Text>
+
+<Decal 
+            position={decal}
+            rotation={[0, 0, 0]}
+            scale={image_size}
+            map={logoTexture}
+            onClick={handleDecalMouseDown}
+            ref={decalRef}
+          />
+    
         <meshStandardMaterial {...textureprops} />
       </mesh>
     </group>
