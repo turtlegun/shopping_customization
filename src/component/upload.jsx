@@ -1,20 +1,41 @@
 import { useContext, useRef, useState } from 'react';
 import style from './canvas3.module.css'
 import logo_input from "../assets/Upload-icon.svg";
-import   {Context, Context4}  from './canvas3';
+import   {Context, Context4, Context6}  from './canvas3';
 import   {Context1}  from './canvas3';
 
-function Upload() {
+import { context } from '@react-three/drei/web/pivotControls/context';
+
+function Upload(props) {
   const inputRef=useRef()
   const [image, setImage] = useContext(Context); // Destructure image from Context
+const[image2,setImage2]=useContext(Context6)
+
   const [text, setText] = useContext(Context1); 
     const[color_text,setColor_text]=useContext(Context4)
     const[input_text,setInput_text]=useState()
     const[position,setPosition]=useState({ x: 0, y: 0 })
+
+    const[count,setCount]=useState(0)
+
+
     const handleimage = (event) => {
         const file = event.target.files[0];
-      
+       
+        if(count==0){
         setImage(URL.createObjectURL(file));
+        setCount(prevCount => prevCount + 1);
+        console.log("first image ")
+    
+      }
+if(count==1 ){
+
+  setImage2(URL.createObjectURL(file));
+console.log("second image set")
+setCount(prevCount => prevCount - 1);
+
+}
+     
       };
     const text_input=(e)=>{
 
@@ -120,7 +141,7 @@ setText(e.target.value)
       </select>
       <h2>Font style</h2>
 </div>
-
+{count}
       </div>
      
      );

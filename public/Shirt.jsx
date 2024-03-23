@@ -12,181 +12,218 @@ import { Context2, Context3 } from '../src/component/canvas3';
 import font from './Oswald/static/Oswald-Bold.ttf'
 import { degToRad } from "three/src/math/MathUtils.js";
 import * as THREE from 'three';
+import ReactCurvedText from 'react-curved-text';
+import ReactDOM from 'react-dom'; // Import ReactDOM
+import CurvedText from '../src/curved';
+
 
 export default function Model(props) {
 
-  const { nodes, materials } = useGLTF('/shirt.glb');
-  const [pos, setPos] = useState([0, 1.8, 1]);
-  const [rotation, setRotation] = useState([0, 0, 0]);
-  const [image_size, setScale] = useState([0.10, 0.10, 0.10]);
-  const [isDragging, setIsDragging] = useState(false);
-  const canvasRef = useRef(null);
-  const decalRef = useRef(null);
-  const textRef = useRef(null); // Ref for the Text component
-  const raycaster = new Raycaster();
-  
-  const [decal_selected,setDecal_selected] = useContext(Context2);
-  const[text_selected,setText_selected]= useContext(Context3);
-  const[se_sel,setSe]=useState(false)
+    const { nodes, materials } = useGLTF('/shirt.glb');
+    const [pos, setPos] = useState([0, 1.8, 1]);
+    const [rotation, setRotation] = useState([0, 0, 0]);
+    const [image_size, setScale] = useState([0.10, 0.10, 0.10]);
+    const [isDragging, setIsDragging] = useState(false);
+    const canvasRef = useRef(null);
+    const decalRef = useRef(null);
+    const textRef = useRef(null); // Ref for the Text component
+    const raycaster = new Raycaster();
 
-  const [tex_sel,setTex]=useState(false)
+    const [decal_selected, setDecal_selected] = useContext(Context2);
+    const [text_selected, setText_selected] = useContext(Context3);
+    const [se_sel, setSe] = useState(false)
 
-
-  const [pos2, setPos2] = useState([0, 1.8, 1]);
-  const [rotation2, setRotation2] = useState([0, 0, 0]);
-  const [font_size, setFont_size] = useState(0.05);
-let text=props.text
-console.log(text)
+    const [tex_sel, setTex] = useState(false)
 
 
-
-let material_inp=props.material
-let textureprops 
-if(material_inp=="cotton"){
-   textureprops = useTexture({
-    map: cotton,
-  });}
-
-else{
-
-  textureprops = useTexture({
-    map: polyster,})
-
-}
-
-
-  useControls({
- 
-    angle: {
-      min: degToRad(0),
-      max: degToRad(360),
-      value: Math.PI / 4,
-      step: 0.01,
-      onChange: (value) => {
-        const x = Math.sin(value);
-        const z = Math.cos(value);
-        const rot = Math.atan2(z, x);
-        setRotation2(() => [0, 0, rot]);
-       
-      },
-    },
-  /* 
-    angle2: {
-      min: degToRad(60),
-      max: degToRad(300),
-      value: Math.PI / 4,
-      step: 0.01,
-      onChange: (value) => {
-        const x1 = Math.cos(value);
-        const z1 = Math.sin(value);
-        const rot1 = Math.atan2(z1, x1); // Adjusted for rotation around y-axis
-        setRotation2(() => [0, rot1, 0]); // Setting rotation around y-axis
-        setPos2((pos) => [x1, pos[1], z1]);
-      },
-    },
-   */
-    image_size: {
-      min: 0.1,
-      max: 2,
-      value: 0.10,
-      step: 0.01,
-      onChange: (value) => {
-        setScale(() => [value, value, 1.5]);
-      },
-    },
-  });
-  
-
-
-  useControls({
-    font_size: {
-      value: 0.05,
-      min: 0.01,
-      max: 0.5,
-      step: 0.01,
-      onChange: (value) => {
-        setFont_size(value);
-      },
-    },
-  });
-
-  let decal = props.position ? props.position : [0, 0.04, 0.10];
-  let selectedValue = props.choice;
-  
-  
-  let text_pos = props.text_position ? props.text_position : [0, 0.05, 0.11];
-  console.log(text_pos)
-
-  
-  let logoTexture = props.image ? useTexture(props.image) : useTexture(goku)
-  
-  const handleDecalMouseDown = (event) => {
-    setSe(prevState => !prevState)
-    setDecal_selected(se_sel);
-    event.stopPropagation(); 
-    console.log("decal selected")
-  };
-
-  const text_select=(event)=>{
-    setTex(prevState => !prevState)
-    setText_selected(tex_sel);
-    event.stopPropagation(); 
-    console.log("text selected")
-
-
-  }
-  let color=props.color_text
-
-  const generateTexture = (text,text_color) => {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    const fontSize = 40;
-    const fontFamily = font;
-    const canvasWidth = 200; // Adjust this based on your text length or requirement
-    const canvasHeight = 50; // Adjust this based on your text size or requirement
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-    context.fillStyle = text_color; // Dynamically set the color to red
-    context.font = `${fontSize}px ${fontFamily}`;
-    context.textBaseline = 'middle';
-    context.textAlign = 'center';
-    context.fillText(text, canvasWidth / 2, canvasHeight / 2);
-    return new THREE.CanvasTexture(canvas);
-  };
-
-  const initialTexture = generateTexture(text,color);
+    const [pos2, setPos2] = useState([0, 1.8, 1]);
+    const [rotation2, setRotation2] = useState([0, 0, 0]);
+    const [font_size, setFont_size] = useState(0.05);
+    let text = props.text
+    console.log(text)
 
 
 
-  return (
+    let material_inp = props.material
+    let textureprops
+    if (material_inp == "cotton") {
+        textureprops = useTexture({
+            map: cotton,
+        });
+    }
+
+    else {
+
+        textureprops = useTexture({
+            map: polyster,
+        })
+
+    }
+
+
+    useControls({
+
+        angle: {
+            min: degToRad(0),
+            max: degToRad(360),
+            value: Math.PI / 4,
+            step: 0.01,
+            onChange: (value) => {
+                const x = Math.sin(value);
+                const z = Math.cos(value);
+                const rot = Math.atan2(x, z);
+                setRotation2(() => [0, 0, rot]);
+
+            },
+        },
+
+        image_size: {
+            min: 0.1,
+            max: 2,
+            value: 0.10,
+            step: 0.01,
+            onChange: (value) => {
+                setScale(() => [value, value, 1.5]);
+            },
+        },
+    });
+
+
+
+    useControls({
+        font_size: {
+            value: 0.05,
+            min: 0.01,
+            max: 0.5,
+            step: 0.01,
+            onChange: (value) => {
+                setFont_size(value);
+            },
+        },
+
+
+        angle2: {
+            min: degToRad(0),
+            max: degToRad(360),
+            value: Math.PI / 4,
+            step: 0.01,
+            onChange: (value) => {
+                const x = Math.sin(value);
+                const z = Math.cos(value);
+                const rot = Math.atan2(x, z);
+                setRotation(() => [0, 0, rot]);
+
+            },
+        },
+
+
+    });
+
+
     
-    <group {...props} scale={[5, 5, 5]} position={[0, 2, 0]} ref={canvasRef}>
-      <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
-        <Decal
-          position={text_pos}
-          rotation={rotation2}
-          scale={font_size}
-          map={initialTexture}
-          onClick={text_select}
-          
+    let decal = props.position ? props.position : [0, 0.04, 0.10];
+
+
+    let decal2= [0, -0.20, 0.10]
+    let selectedValue = props.choice;
+
+
+    let text_pos = props.text_position ? props.text_position : [0, -0.20, 0.10];
+    console.log(text_pos)
+
+
+    let logoTexture = props.image ? useTexture(props.image) : useTexture(goku)
+    let logoTexture2 = props.image2 ? useTexture(props.image2) : useTexture(luffy)
+
+    let logoTexture3 = useTexture(luffy)
+    console.log(props.image2)
+    const handleDecalMouseDown = (event) => {
+        setSe(prevState => !prevState)
+        setDecal_selected(se_sel);
+        event.stopPropagation();
+        console.log("decal selected")
+    };
+    const handleDecalMouseDown1 = (event) => {
+        setSe(prevState => !prevState)
+        setDecal_selected(se_sel);
+        event.stopPropagation();
+        console.log("decal selected")
+    };
+    const text_select = (event) => {
+        setTex(prevState => !prevState)
+        setText_selected(tex_sel);
+        event.stopPropagation();
+        console.log("text selected")
+
+
+    }
+    let color = props.color_text
+/*
+    const generateTexture = (text, text_color) => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const fontSize = 10;
+        const fontFamily = font;
+        const canvasWidth = 200; // Adjust this based on your text length or requirement
+        const canvasHeight = 50; // Adjust this based on your text size or requirement
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        context.fillStyle = text_color; // Dynamically set the color
+        context.font = `${fontSize}px ${fontFamily}`;
+        context.textBaseline = 'middle';
+        context.fillText(text, canvasWidth/2, canvasHeight / 2);
+        ReactDOM.render(<CurvedText text={text} />, canvas);
         
-          ref={decalRef}
-        />
 
-<Decal 
-            position={decal}
-            rotation={[0, 0, 0]}
-            scale={image_size}
-            map={logoTexture}
-            onClick={handleDecalMouseDown}
-            ref={decalRef}
-          />
-    
-        <meshStandardMaterial {...textureprops} />
-      </mesh>
-    </group>
-   
-  );
+        return new THREE.CanvasTexture(canvas);
+    };
+
+    const initialTexture = generateTexture(text, color);
+
+*/
+
+    return (
+
+        <group {...props} scale={[5, 5, 5]} position={[0, 2, 0]} ref={canvasRef}>
+            <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
+{! props.delete &&(
+                <Decal
+                    position={decal}
+                    rotation={rotation2}
+                    scale={image_size}
+                    map={logoTexture}
+                    onClick={handleDecalMouseDown}
+
+
+                />
+
+)}
+<Decal
+                    position={text_pos}
+                    rotation={rotation}
+                    scale={font_size}
+                    map={logoTexture2}
+                    onClick={text_select}
+
+
+                />
+
+<Decal
+                    position={[0, -0.20, 0.10]}
+                    rotation={[0,0,0]}
+                    scale={[0.10, 0.10, 0.10]}
+                    map={logoTexture3}
+                    onClick={text_select}
+
+
+                />
+
+                <meshStandardMaterial {...textureprops} />
+            </mesh>
+         
+        </group>
+
+    );
 }
 
 useGLTF.preload('/shirt.glb');
