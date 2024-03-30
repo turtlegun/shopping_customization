@@ -15,14 +15,18 @@ import * as THREE from 'three';
 import ReactCurvedText from 'react-curved-text';
 import ReactDOM from 'react-dom'; // Import ReactDOM
 import CurvedText from '../src/curved';
+import { setImage } from '../src/counter_slice';
 
-
+import { useSelector, useDispatch } from 'react-redux';
+import { useImage } from '../src/App';
 export default function Model(props) {
-
+    
+    const dispatch = useDispatch();
+    const imageURL = useSelector((state) => state.counter.image);
     const { nodes, materials } = useGLTF('/shirt.glb');
     const [pos, setPos] = useState([0, 1.8, 1]);
     const [rotation, setRotation] = useState([0, 0, 0]);
-    const [image_size, setScale] = useState([0.10, 0.10, 0.10]);
+    const [image_size, setScale] = useState([0.50, 0.50, 0.10]);
     const [isDragging, setIsDragging] = useState(false);
     const canvasRef = useRef(null);
     const decalRef = useRef(null);
@@ -35,7 +39,7 @@ export default function Model(props) {
 
     const [tex_sel, setTex] = useState(false)
 
-
+    const {image5, setImage5} = useImage();
     const [pos2, setPos2] = useState([0, 1.8, 1]);
     const [rotation2, setRotation2] = useState([0, 0, 0]);
     const [font_size, setFont_size] = useState(0.05);
@@ -66,7 +70,7 @@ export default function Model(props) {
         angle: {
             min: degToRad(0),
             max: degToRad(360),
-            value: Math.PI / 4,
+            value: 0,
             step: 0.01,
             onChange: (value) => {
                 const x = Math.sin(value);
@@ -119,7 +123,8 @@ export default function Model(props) {
 
     });
 
-
+console.log(props.image)
+console.log("no image ")
     
     let decal = props.position ? props.position : [0, 0.04, 0.10];
 
@@ -130,9 +135,9 @@ export default function Model(props) {
 
     let text_pos = props.text_position ? props.text_position : [0, -0.20, 0.10];
     console.log(text_pos)
+    console.log(imageURL)
 
-
-    let logoTexture = props.image ? useTexture(props.image) : useTexture(goku)
+    let logoTexture = props.image ? useTexture(props.image) : useTexture(goku);
     let logoTexture2 = props.image2 ? useTexture(props.image2) : useTexture(luffy)
 
     let logoTexture3 = useTexture(luffy)
@@ -184,7 +189,7 @@ export default function Model(props) {
 
     return (
 
-        <group {...props} scale={[5, 5, 5]} position={[0, 2, 0]} ref={canvasRef}>
+        <group {...props} scale={[10, 10, 10]} position={[1, 1, 0]} ref={canvasRef}>
             <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
 {! props.delete &&(
                 <Decal
@@ -198,6 +203,8 @@ export default function Model(props) {
                 />
 
 )}
+
+{/*
 <Decal
                     position={text_pos}
                     rotation={rotation}
@@ -217,7 +224,7 @@ export default function Model(props) {
 
 
                 />
-
+*/}
                 <meshStandardMaterial {...textureprops} />
             </mesh>
          

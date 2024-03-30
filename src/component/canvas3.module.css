@@ -153,3 +153,28 @@ width: 50px;
 height: 50px;
 
 }
+
+.canvas{
+
+position: relative;
+
+top:50px;
+
+left: 200px;
+
+
+width: 100vw;
+height: 100vh;
+
+
+
+
+}
+.canvas_style{
+
+
+    width: "50vw";
+    height: "50vh"
+
+
+}

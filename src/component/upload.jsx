@@ -54,7 +54,7 @@ setText(e.target.value)
     const handleSelectChange = (event) => {
       setSelectedOption(event.target.value);
     };
-  
+  console.log(`${image} this is the image`)
 
     return ( 
 

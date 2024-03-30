@@ -19,6 +19,9 @@ export default function Model(props) {
   const { nodes, materials } = useGLTF('/tshirt.glb')
   const [scale, setScale] = useState([0.10, 0.10, 0.10]);
   let logoTexture = useTexture(goku)
+ 
+
+
 
   useControls({
     
