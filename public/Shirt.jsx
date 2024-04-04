@@ -4,8 +4,8 @@ import goku from './goku.jpg';
 import { MeshBasicMaterial, TextureLoader, Raycaster, Vector2 } from 'three';
 import luffy from './luffy.webp';
 import naruto from './naruto.png';
-import cotton from './cotton.jpg';
-import polyster from './polyster.jpg';
+import cotton from './first_design.jpg';
+import polyster from './second_design.jpg';
 import { useControls } from "leva";
 import { Text } from '@react-three/drei'; // Import Text component
 import { Context2, Context3 } from '../src/component/canvas3';
@@ -84,7 +84,7 @@ export default function Model(props) {
         image_size: {
             min: 0.1,
             max: 2,
-            value: 0.10,
+            value: 0,
             step: 0.01,
             onChange: (value) => {
                 setScale(() => [value, value, 1.5]);
@@ -191,6 +191,19 @@ console.log("no image ")
 
         <group {...props} scale={[10, 10, 10]} position={[1, 1, 0]} ref={canvasRef}>
             <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
+{/* first decal */}
+            <Decal
+                    position={text_pos}
+                    rotation={rotation}
+                    scale={font_size}
+                    map={logoTexture2}
+                    onClick={text_select}
+
+
+                />
+
+
+
 {! props.delete &&(
                 <Decal
                     position={decal}
@@ -204,16 +217,10 @@ console.log("no image ")
 
 )}
 
-{/*
-<Decal
-                    position={text_pos}
-                    rotation={rotation}
-                    scale={font_size}
-                    map={logoTexture2}
-                    onClick={text_select}
 
 
-                />
+
+                {/*
 
 <Decal
                     position={[0, -0.20, 0.10]}

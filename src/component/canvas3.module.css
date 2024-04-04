@@ -9,7 +9,7 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
     
-
+    background-color: rgb(126, 125, 125);
 }
 .customization{
 
@@ -176,5 +176,31 @@ height: 100vh;
     width: "50vw";
     height: "50vh"
 
+
+}
+
+.button{
+
+position: relative;
+
+top: 40px;
+left: 1100px;
+
+background-color:  #3CB371;
+color: white;
+border-color:  #3CB371;
+
+}
+
+
+.shirt_color{
+
+color: white;
+
+}
+
+.material_color{
+
+    color: white;
 
 }

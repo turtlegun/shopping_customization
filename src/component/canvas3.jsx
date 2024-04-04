@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { ContactShadows, OrbitControls } from "@react-three/drei";
+import { ContactShadows, MeshReflectorMaterial, OrbitControls, PresentationControls, Stage } from "@react-three/drei";
 import Shirt from "../../public/Shirt";
 import style from "./canvas3.module.css";
 import Upload from "./upload";
@@ -8,6 +8,9 @@ import Material_input from "./material";
 import shirt_2d from '../2d_t-shirt.png';
 import { useImage } from "../App";
 import Tshirt_2d from "../tshirt_2d";
+
+
+
 
 export const Context = React.createContext();
 export const Context1 = React.createContext();
@@ -21,6 +24,11 @@ export const Context8 = React.createContext();
 
 export const Context9=React.createContext();
 
+
+export const Context10=React.createContext();
+
+
+export const Context11=React.createContext();
 
 function Canvas3(props) {
   const [showdisplay, setShowdisplay] = useState(false);
@@ -39,6 +47,11 @@ function Canvas3(props) {
   const [dlt, setDlt] = useState(false);
   const [material, setMaterial] = useState("cotton");
   const [image5, setImage5] = useState(null);
+  const[model_image_position,setModel_image_position]=useState(null)
+
+
+const[model_image,setModel_image]=useState(null)
+
 
   const handleCanvasMouseMove = (event) => {
     if (!decal_selected || !canvasRef.current) return;
@@ -90,50 +103,76 @@ function Canvas3(props) {
                     <Context7.Provider value={[image3, setImage3]}>
                       <Context8.Provider value={[image5, setImage5]}>
                         <Context9.Provider value={[decalPosition,setDecalPosition]}>
-                        {showdisplay && (
+                        <Context10.Provider value={[model_image,setModel_image]}>
+                          <Context11.Provider value={[model_image_position,setModel_image_position]}>
+
+                        
+                        {!showdisplay && (
                           <div className={style.app}>
                             <div className={style.canvas_style} style={{ width: "50vw", height: "50vh" }}>
-                              <Canvas
-                               size={[`2000px`,`3000px`]}
-                              className={style.canvas}
-                                width={500}
-                                height={1000}
-                                ref={canvasRef}
-                                onMouseMove={decal_selected ? handleCanvasMouseMove : text_selected ? handleMouseMove : null}
-                                onMouseUp={decal_selected ? handleCanvasMouseUp : text_selected ? handleMouseDown3 : null}
-                              >
-                                <ContactShadows
-                                  resolution={512}
-                                  position={[0, 4, 5]}
-                                  opacity={10}
-                                  scale={10}
-                                  blur={2}
-                                  far={0.8}
-                                />
-                                <ambientLight />
-                                <Suspense fallback={null}>
-                                
-                                
-                                
-                                  <Shirt
-                                    color={color}
-                                    position={decalPosition}
-                                    image={image5}
-                                    text={text}
-                                    text_position={text_pos}
-                                    color_text={color_text}
-                                    material={material}
-                                    image2={image2}
-                                    delete={dlt}
-                                  />
-                                </Suspense>
-                                <pointLight position={[15, 15, 15]} />
-                                <OrbitControls enableDamping={true} dampingFactor={0.1} />
-                              </Canvas>
+                            <Canvas
+  size={['2000px', '3000px']}
+  className={style.canvas}
+  width={500}
+  height={1000}
+  ref={canvasRef}
+  onMouseMove={decal_selected ? handleCanvasMouseMove : text_selected ? handleMouseMove : null}
+  onMouseUp={decal_selected ? handleCanvasMouseUp : text_selected ? handleMouseDown3 : null}
+>
+  <PresentationControls
+    speed={1.5}
+    global
+    polar={[-0.1, Math.PI / 4]}
+  >
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-2.5}>
+      <planeGeometry args={[300, 300]} />
+      <MeshReflectorMaterial
+        blur={[500, 500]}
+        resolution={2048}
+        mixBlur={5}
+        mixStrength={40}
+        roughness={1}
+        depthScale={1.2}
+        minDepthThreshold={0.4}
+        maxDepthThreshold={1.4}
+    color={0x555555}
+        metalness={0.5}
+      />
+    </mesh>
+
+    <ContactShadows
+      resolution={2048}
+      position={[0, 4, 5]}
+      opacity={10}
+      scale={10}
+      blur={2}
+      far={0.8}
+    />
+    <ambientLight />
+    <Suspense fallback={null}>
+      <Stage environment="city" intensity={0.6} castShadow={false}>
+        <Shirt
+          color={color}
+          position={decalPosition}
+          image={image5}
+          text={text}
+          text_position={model_image_position}
+          color_text={color_text}
+          material={material}
+          image2={model_image}
+          delete={dlt}
+        />
+      </Stage>
+    </Suspense>
+    <pointLight position={[15, 25, 15]} /> {/* Adjusted Y-coordinate */}
+    <OrbitControls enableDamping={true} dampingFactor={0.1} />
+  </PresentationControls>
+</Canvas>
+
                               <div className={style.customization}>
                                 <div></div>
                                 <div className={style.color_container}>
-                                  <h2>shirt color</h2>
+                                  <h2 className={style.shirt_color}>shirt color</h2>
                                   <input type="button" className={style.shirt} onClick={(e) => setColor("yellow")} />
                                   <input type="button" id="mesh" name="vest" className={style.shirt1} onClick={(e) => setColor("red")} />
                                   <input type="button" id="mesh" name="vest" className={style.shirt2} onClick={(e) => setColor("blue")} />
@@ -144,19 +183,22 @@ function Canvas3(props) {
                                   <input type="button" id="mesh" name="vest" className={style.shirt6} onClick={(e) => setColor("grey")} />
                                   <input type="button" id="mesh" name="vest" className={style.shirt7} onClick={(e) => setColor("white")} />
                                 </div>
-                                <button onClick={(e) => setDlt((prevState) => !prevState)}>Hide</button>
-                                <Material_input />
+                                 {/*  <button onClick={(e) => setDlt((prevState) => !prevState)}>Hide</button> */}
+                                <Material_input  />
                                 <div className={style.upload}>
-                                  <Upload delete={dlt} update={setDlt} />
+                               { /*  <Upload delete={dlt} update={setDlt} />  */}
                                 </div>
                               </div>
                             </div>
                           </div>
                         )}
-                        <button onClick={() => setShowdisplay(prevState => !prevState)} className={style.button}>convert 3d</button>
-                        {!showdisplay && (
+                     
+                        <button onClick={() => setShowdisplay(prevState => !prevState)} className={style.button}>convert 3d</button> 
+                        {/*!showdisplay && (
                           <Tshirt_2d />
-                        )}
+                        )*/}
+                        </Context11.Provider>
+                        </Context10.Provider>
                         </Context9.Provider>
                       </Context8.Provider>
                     </Context7.Provider>
