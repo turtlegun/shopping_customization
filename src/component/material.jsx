@@ -7,7 +7,12 @@ function Material_input() {
     const [material_name, setMaterialName] = useState([]);
 
     useEffect(() => {
-        fetchMaterialNames();
+       
+        fetchMaterialNames(); 
+        const interval = setInterval(fetchMaterialNames, 5000); 
+
+        return () => clearInterval(interval);
+
     }, []);
 
     const fetchMaterialNames = async () => {

@@ -56,7 +56,9 @@ export default function Model(props) {
 
 
 
+      const interval = setInterval(fetchImages, 5000); // Fetch every 5 seconds
 
+      return () => clearInterval(interval);
     }, []);
 
 
