@@ -17,6 +17,7 @@ import { Provider } from 'react-redux'
 import { createContext, useContext, useEffect, useState } from 'react';
 import CanvasDownload2 from './component/circle';
 import ImageRotator from './component/triangle';
+import Image_backend from './image';
 
 const ImageContext = createContext();
 
@@ -51,6 +52,8 @@ useEffect(()=>{
           <Route exact path="/canvas4" element={<TwoCanvasText/>} />
           <Route exact path="/circle" element={<CanvasDownload2/>} />
           <Route exact path="/rotation" element={<ImageRotator/>} />
+          <Route exact path="/backend" element={<Image_backend/>} />
+          
           
 
 

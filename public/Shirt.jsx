@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Decal, Html, useGLTF, useTexture } from '@react-three/drei';
 import goku from './goku.jpg';
 import { MeshBasicMaterial, TextureLoader, Raycaster, Vector2 } from 'three';
@@ -7,7 +7,7 @@ import naruto from './naruto.png';
 import cotton from './first_design.jpg';
 import polyster from './second_design.jpg';
 import { useControls } from "leva";
-import { Text } from '@react-three/drei'; // Import Text component
+
 import { Context2, Context3 } from '../src/component/canvas3';
 import font from './Oswald/static/Oswald-Bold.ttf'
 import { degToRad } from "three/src/math/MathUtils.js";
@@ -16,11 +16,12 @@ import ReactCurvedText from 'react-curved-text';
 import ReactDOM from 'react-dom'; // Import ReactDOM
 import CurvedText from '../src/curved';
 import { setImage } from '../src/counter_slice';
-
+import { Buffer } from 'buffer';
 import { useSelector, useDispatch } from 'react-redux';
 import { useImage } from '../src/App';
+import axios from 'axios';
+
 export default function Model(props) {
-    
     const dispatch = useDispatch();
     const imageURL = useSelector((state) => state.counter.image);
     const { nodes, materials } = useGLTF('/shirt.glb');
@@ -30,7 +31,7 @@ export default function Model(props) {
     const [isDragging, setIsDragging] = useState(false);
     const canvasRef = useRef(null);
     const decalRef = useRef(null);
-    const textRef = useRef(null); // Ref for the Text component
+    const textRef = useRef(null);
     const raycaster = new Raycaster();
 
     const [decal_selected, setDecal_selected] = useContext(Context2);
@@ -44,15 +45,50 @@ export default function Model(props) {
     const [rotation2, setRotation2] = useState([0, 0, 0]);
     const [font_size, setFont_size] = useState(0.05);
     let text = props.text
-    console.log(text)
+
+
+    const[iamge_backend,setBackend_image]=useState()
+
+    const [images, setImages] = useState([]);
+
+    useEffect(() => {
+      fetchImages();
 
 
 
-    let material_inp = props.material
-    let textureprops
-    if (material_inp == "cotton") {
+
+    }, []);
+
+
+
+    useEffect(() => {
+        const material = props.material; 
+        images.forEach((image) => {
+            if (material === image.name) {
+                console.log(image.name)
+                let source = `data:image/${image.img.contentType};base64,${Buffer.from(image.img.data).toString('base64')}`
+                setBackend_image(source);
+            }
+        });
+    }, [props.material, images]); 
+
+  
+    const fetchImages = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/send_image');
+        setImages(response.data);
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    };
+
+
+
+
+let textureprops
+    if (iamge_backend) {
         textureprops = useTexture({
-            map: cotton,
+            map: iamge_backend,
         });
     }
 
@@ -65,8 +101,11 @@ export default function Model(props) {
     }
 
 
-    useControls({
+  
 
+    console.log(iamge_backend)
+
+    useControls({
         angle: {
             min: degToRad(0),
             max: degToRad(360),
@@ -92,8 +131,6 @@ export default function Model(props) {
         },
     });
 
-
-
     useControls({
         font_size: {
             value: 0.05,
@@ -105,7 +142,6 @@ export default function Model(props) {
             },
         },
 
-
         angle2: {
             min: degToRad(0),
             max: degToRad(360),
@@ -116,127 +152,54 @@ export default function Model(props) {
                 const z = Math.cos(value);
                 const rot = Math.atan2(x, z);
                 setRotation(() => [0, 0, rot]);
-
             },
         },
-
-
     });
 
-console.log(props.image)
-console.log("no image ")
-    
     let decal = props.position ? props.position : [0, 0.04, 0.10];
-
-
-    let decal2= [0, -0.20, 0.10]
+    let decal2 = [0, -0.20, 0.10];
     let selectedValue = props.choice;
-
-
     let text_pos = props.text_position ? props.text_position : [0, -0.20, 0.10];
-    console.log(text_pos)
-    console.log(imageURL)
 
     let logoTexture = props.image ? useTexture(props.image) : useTexture(goku);
     let logoTexture2 = props.image2 ? useTexture(props.image2) : useTexture(luffy)
+    let logoTexture3 = useTexture(luffy);
 
-    let logoTexture3 = useTexture(luffy)
-    console.log(props.image2)
     const handleDecalMouseDown = (event) => {
-        setSe(prevState => !prevState)
+        setSe(prevState => !prevState);
         setDecal_selected(se_sel);
         event.stopPropagation();
-        console.log("decal selected")
     };
-    const handleDecalMouseDown1 = (event) => {
-        setSe(prevState => !prevState)
-        setDecal_selected(se_sel);
-        event.stopPropagation();
-        console.log("decal selected")
-    };
+
     const text_select = (event) => {
-        setTex(prevState => !prevState)
+        setTex(prevState => !prevState);
         setText_selected(tex_sel);
         event.stopPropagation();
-        console.log("text selected")
-
-
-    }
-    let color = props.color_text
-/*
-    const generateTexture = (text, text_color) => {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        const fontSize = 10;
-        const fontFamily = font;
-        const canvasWidth = 200; // Adjust this based on your text length or requirement
-        const canvasHeight = 50; // Adjust this based on your text size or requirement
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-        context.fillStyle = text_color; // Dynamically set the color
-        context.font = `${fontSize}px ${fontFamily}`;
-        context.textBaseline = 'middle';
-        context.fillText(text, canvasWidth/2, canvasHeight / 2);
-        ReactDOM.render(<CurvedText text={text} />, canvas);
-        
-
-        return new THREE.CanvasTexture(canvas);
     };
 
-    const initialTexture = generateTexture(text, color);
-
-*/
-
     return (
-
         <group {...props} scale={[10, 10, 10]} position={[1, 1, 0]} ref={canvasRef}>
             <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
-{/* first decal */}
-            <Decal
+                <Decal
                     position={text_pos}
                     rotation={rotation}
                     scale={font_size}
                     map={logoTexture2}
                     onClick={text_select}
-
-
                 />
 
-
-
-{! props.delete &&(
-                <Decal
-                    position={decal}
-                    rotation={rotation2}
-                    scale={image_size}
-                    map={logoTexture}
-                    onClick={handleDecalMouseDown}
-
-
-                />
-
-)}
-
-
-
-
-                {/*
-
-<Decal
-                    position={[0, -0.20, 0.10]}
-                    rotation={[0,0,0]}
-                    scale={[0.10, 0.10, 0.10]}
-                    map={logoTexture3}
-                    onClick={text_select}
-
-
-                />
-*/}
+                {!props.delete && (
+                    <Decal
+                        position={decal}
+                        rotation={rotation2}
+                        scale={image_size}
+                        map={logoTexture}
+                        onClick={handleDecalMouseDown}
+                    />
+                )}
                 <meshStandardMaterial {...textureprops} />
             </mesh>
-         
         </group>
-
     );
 }
 

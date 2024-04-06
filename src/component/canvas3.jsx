@@ -9,6 +9,8 @@ import shirt_2d from '../2d_t-shirt.png';
 import { useImage } from "../App";
 import Tshirt_2d from "../tshirt_2d";
 
+import axios from 'axios';
+
 
 
 
@@ -48,9 +50,15 @@ function Canvas3(props) {
   const [material, setMaterial] = useState("cotton");
   const [image5, setImage5] = useState(null);
   const[model_image_position,setModel_image_position]=useState(null)
-
-
+  const [items, setItems] = useState({});
+const[backend_image,setBackend_image]=useState(null)
 const[model_image,setModel_image]=useState(null)
+
+
+
+
+
+
 
 
   const handleCanvasMouseMove = (event) => {
@@ -90,6 +98,8 @@ const[model_image,setModel_image]=useState(null)
     const updatedY = -(offsetY / rect.height) * 2.12 + 0.50;
     setText_pos([updatedX, updatedY, text_pos[2]]);
   };
+
+
 
   return (
     <>
@@ -197,6 +207,9 @@ const[model_image,setModel_image]=useState(null)
                         {/*!showdisplay && (
                           <Tshirt_2d />
                         )*/}
+
+
+
                         </Context11.Provider>
                         </Context10.Provider>
                         </Context9.Provider>
