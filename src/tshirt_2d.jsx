@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import tshirt_2d from "./2d_t-shirt.png";
+import tshirt_2d from "./front2_tshirt.webp";
 import Canvas3, {
   Context10,
   Context11,
+  Context12,
   Context8,
   Context9,
 } from "./component/canvas3";
@@ -12,6 +13,10 @@ import style from "./tshirt_2d.module.css";
 import Upload from "./component/upload";
 
 
+
+import tshirt_2d_side from './side_black.png'
+
+import tshirt_2d_back from './back_tshirt.png'
 
 import logo_input from "./assets/Upload-icon.svg";
 
@@ -40,8 +45,10 @@ function Tshirt_2d() {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const[tshirt_image_side,setTshirt_image_side]=useContext(Context12)
 
-
+  const[background_image_tshirt,setBackground_image_tshirt]=useState("front")
+  const[image_background_choosen,setImage_background_choosen]=useState(tshirt_2d)
 
 
   useEffect(() => {
@@ -82,8 +89,8 @@ function Tshirt_2d() {
         );
       }
     };
-    img.src = tshirt_2d;
-  }, [image5, image2, position, second_position, angleInDegrees]);
+    img.src =image_background_choosen;
+  }, [image_background_choosen,   image5, image2, position, second_position, angleInDegrees]);
 
   const handleimage = (event) => {
     const file = event.target.files[0];
@@ -117,6 +124,7 @@ function Tshirt_2d() {
       const img = new Image();
       img.onload = () => {
         setImage2(img);
+        setCount(2);
       };
       img.src = event.target.result;
     };
@@ -154,16 +162,12 @@ function Tshirt_2d() {
 
       const offsetY = e.clientY - rect.top;
 
-      let updatedX = +(offsetX / rect.width) - 0.47;
-      updatedX = Math.min(0.12005912, Math.max(-0.2029292, updatedX));
-
-      let updatedY = -(offsetY / rect.height) + 0.47;
-      updatedY = Math.min(0.12005912, Math.max(-0.52005912, updatedY));
+   
 
       setDecalPosition([updatedX, updatedY, decalPosition[2]]);
       setPosition({
-        x: offsetX - 60,
-        y: offsetY - 55,
+        x: offsetX - 80,
+        y: offsetY - 30,
       });
     }
 
@@ -194,9 +198,13 @@ function Tshirt_2d() {
   const deletebtn = () => {
     if (first_image_selected) {
       setImage5(null);
+      setCount(prevCount => prevCount - 1);
+      setFirst_image_selected(true)
     }
     if (second_image_selected) {
       setImage2(null);
+      setCount(prevCount => prevCount - 1);
+      setFirst_image_selected(true)
     }
   };
 
@@ -205,8 +213,17 @@ function Tshirt_2d() {
     setIsOpen(!isOpen);
   };
 
+  const background_image = (event) => {
+    setTshirt_image_side(event.target.value);
 
-
+    if (event.target.value === "front_side") {
+      setImage_background_choosen(tshirt_2d);
+    } else if (event.target.value === "back_side") {
+      setImage_background_choosen(tshirt_2d);
+    } else if (event.target.value === "right_side" || event.target.value === "left_side") {
+      setImage_background_choosen(tshirt_2d_side);
+    }
+  };
 
   return (
     <div className={style.shirt_2d}>
@@ -232,29 +249,29 @@ function Tshirt_2d() {
       <div style={{ width: '1350px', borderTop: '2px solid black' ,position:'relative',top:'10px'}}></div>
      
       <div className={style.movement}>
-  <h3 className={style.movement_head}>Movement </h3>
-  <b onClick={toggleDropdown} className={style.image_btn}>Image</b> &nbsp;&nbsp;
-  <b className={style.slash_image}>/</b>&nbsp;&nbsp;
+        <h3 className={style.movement_head}>Movement </h3>
+        <b onClick={toggleDropdown} className={style.image_btn}>font</b> &nbsp;&nbsp;
+        <b className={style.slash_image}>/</b>&nbsp;&nbsp;
 
-  {isOpen && (
-    <ul className={style.dropdownUl}>
-      {count >= 1 && (
-        <li onClick={() => { setFirst_image_selected(true); setSecond_image_selected(false); }}>
-          First Image
-        </li>
-      )}
-      {count >= 2 && (
-        <li onClick={() => { setSecond_image_selected(true); setFirst_image_selected(false); }}>
-          Second Image
-        </li>
-      )}
-    </ul>
-  )}
-</div>
+        {isOpen && (
+          <ul className={style.dropdownUl}>
+            {count > 0 && (
+              <li onClick={() => { setFirst_image_selected(true); setSecond_image_selected(false); }}>
+                First font
+              </li>
+            )}
+            {count > 1 && (
+              <li onClick={() => { setSecond_image_selected(true); setFirst_image_selected(false); }}>
+                Second font
+              </li>
+            )}
+          </ul>
+        )}
+      </div>
       <button onClick={deletebtn}>Delete</button>
 
       <div className={style.image_upload}>
-        <h3>image upload</h3>
+        <h3>font upload</h3>
 
         {count === 1 ? null : (
           <input
@@ -282,6 +299,8 @@ function Tshirt_2d() {
           />
         )}
 
+
+
         <img
           src={logo_input}
           alt="Logo"
@@ -289,8 +308,18 @@ function Tshirt_2d() {
           className={style.upload_svg}
         />
       </div>
-      <div>
+      <div className={style.font_upload}>
         <h3>font upload </h3>
+      </div>
+
+      <div>
+        <h3>tshirt side</h3>
+        <select value={tshirt_image_side} onChange={background_image}>
+          <option value="front_side"> front side</option>
+          <option value="back_side">back side</option>
+          <option value="right_side"> right side</option>
+          <option value="left_side">left side</option>
+        </select>
       </div>
     </div>
   );

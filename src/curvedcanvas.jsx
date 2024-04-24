@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+
+import style from './curvedcanvas.module.css'
+
 function CanvasDownload() {
   const canvasRef = useRef(null);
   const [text, setText] = useState('');
   const [selectedFont, setSelectedFont] = useState('Butterfly Kids, cursive'); // Default font
-
+  const[downloadtype,setDownloadtype]=useState('png')
   const [curver, setCurve] = useState(100);
 
   const handleInputChange = (event) => {
@@ -19,11 +22,13 @@ function CanvasDownload() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
+    
+
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  
     // Draw text along a curve starting from left to right with an upward arch
-    ctx.font = `100px ${selectedFont}`;
+    ctx.font = `bold 100px ${selectedFont}`;
     ctx.fillStyle = 'red';
     ctx.textAlign = 'center';
 
@@ -44,30 +49,59 @@ function CanvasDownload() {
   }, [text, curver, selectedFont]);
 
   const handleDownload = () => {
-    // Create download link
-    const downloadLink = document.createElement('a');
-    downloadLink.setAttribute('download', 'canvas_image.png');
-    canvasRef.current.toBlob(function (blob) {
-      const url = URL.createObjectURL(blob);
-      downloadLink.setAttribute('href', url);
+    if (downloadtype === 'jpeg') {
+      const canvas = canvasRef.current;
+  
+      // Convert canvas to data URL with JPEG format and quality 1 (highest quality)
+      const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+  
+      // Create download link
+      const downloadLink = document.createElement('a');
+      downloadLink.setAttribute('download', 'canvas_image.jpeg');
+      downloadLink.setAttribute('href', dataURL);
       downloadLink.click();
-      URL.revokeObjectURL(url);
-    });
-  };
+    } else if (downloadtype === 'png') {
+      const canvas = canvasRef.current;
+  
+      // Create download link for PNG format
+      const downloadLink = document.createElement('a');
+      downloadLink.setAttribute('download', 'canvas_image.png');
+      canvas.toBlob(function (blob) {
+        const url = URL.createObjectURL(blob);
+        downloadLink.setAttribute('href', url);
+        downloadLink.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+  }
+  
+  const  handleDownloadtype=(event)=>{
+
+setDownloadtype(event.target.value)
+
+    }
+
 
   return (
-    <div>
+    <div className={style.curved_app}>
       <input type="text" value={text} onChange={handleInputChange} placeholder="Enter text" />
-      <canvas ref={canvasRef} width="800" height="600" style={{ border: '1px solid black' }}></canvas>
+      <canvas ref={canvasRef} width="800" height="500" style={{ border: '1px solid black' }}   className={style.canvas_background}> </canvas>
       <br />
       <button onClick={handleDownload}>Download Image</button>
       <input type='number' onChange={(e) => { setCurve(e.target.value) }} />
-      <h3>Choose font:</h3>
+      <h3 className={style.header_font}>Choose font:</h3>
       <select value={selectedFont} onChange={handleFontChange}>
         <option value="Butterfly Kids, cursive">Butterfly Kids</option>
         <option value="Rubik Scribble, sans-serif">Rubik Scribble</option>
         <option value="Workbench, sans-serif">Workbench</option>
       </select>
+
+      <select value={selectedFont} onChange={handleDownloadtype}>
+        <option value="png"> PNG</option>
+        <option value="jpeg">JPEG</option>
+      
+      </select>
+
     </div>
   );
 }

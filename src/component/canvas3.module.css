@@ -8,8 +8,8 @@
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
-    
-    background-color: rgb(126, 125, 125);
+    background-color: rgb(158, 156, 156);
+
 }
 .customization{
 
@@ -172,7 +172,7 @@ height: 100vh;
 }
 .canvas_style{
 
-
+margin-left: 100px;
     width: "50vw";
     height: "50vh"
 

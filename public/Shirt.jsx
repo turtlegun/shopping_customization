@@ -51,6 +51,8 @@ export default function Model(props) {
 
     const [images, setImages] = useState([]);
 
+/*
+
     useEffect(() => {
       fetchImages();
 
@@ -85,7 +87,7 @@ export default function Model(props) {
     };
 
 
-
+*/
 
 let textureprops
     if (iamge_backend) {
@@ -159,6 +161,9 @@ let textureprops
     });
 
     let decal = props.position ? props.position : [0, 0.04, 0.10];
+
+let texture=useTexture(goku)
+
     let decal2 = [0, -0.20, 0.10];
     let selectedValue = props.choice;
     let text_pos = props.text_position ? props.text_position : [0, -0.20, 0.10];
@@ -182,6 +187,38 @@ let textureprops
     return (
         <group {...props} scale={[10, 10, 10]} position={[1, 1, 0]} ref={canvasRef}>
             <mesh geometry={nodes.T_Shirt_male.geometry} material={materials.lambert1} material-color={props.color}>
+             
+             
+            {
+  props.image.map((imageUrl, index) => {
+
+
+
+    console.log(`props.position ${props.position[index]}`)
+
+    const decal = props.position ? props.position[index] : { x: 0, y: 0, z: 0.15 };
+
+    const texture = useTexture(imageUrl);
+   
+    const { x, y, z } = decal;
+    console.log(`x is ${x}`)
+    console.log(`y is ${x}`)
+
+    const newPosition = [x, y, z];
+
+    console.log(index);
+    console.log(`the decal is ${JSON.stringify(props.position[index])}`);
+ console.log(newPosition); 
+
+    return (
+      <Decal key={index} position={newPosition} rotation={rotation} scale={image_size} map={texture} />
+    );
+  })
+}
+{/* 
+<Decal  position={[0,0,0]} rotation={rotation} scale={image_size} map={texture} onClick={handleDecalMouseDown}  />
+     */}        
+          {/*  
                 <Decal
                     position={text_pos}
                     rotation={rotation}
@@ -198,7 +235,7 @@ let textureprops
                         map={logoTexture}
                         onClick={handleDecalMouseDown}
                     />
-                )}
+                )} */}  
                 <meshStandardMaterial {...textureprops} />
             </mesh>
         </group>

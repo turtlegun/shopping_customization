@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { ContactShadows, MeshReflectorMaterial, OrbitControls, PresentationControls, Stage } from "@react-three/drei";
+import { ContactShadows, Float, MeshReflectorMaterial, OrbitControls, PresentationControls, Stage } from "@react-three/drei";
 import Shirt from "../../public/Shirt";
 import style from "./canvas3.module.css";
 import Upload from "./upload";
@@ -9,10 +9,13 @@ import shirt_2d from '../2d_t-shirt.png';
 import { useImage } from "../App";
 import Tshirt_2d from "../tshirt_2d";
 
+import New_shirt2 from '../../public/Leander_5_model'
+
 import axios from 'axios';
 
 
-
+import New_shirt from "../../public/Leander_tshirt"
+import CanvasImageUploader from "../texting_2d_canvas";
 
 export const Context = React.createContext();
 export const Context1 = React.createContext();
@@ -32,15 +35,33 @@ export const Context10=React.createContext();
 
 export const Context11=React.createContext();
 
+export const Context12=React.createContext();
+
+
+export const Context13=React.createContext();
+
+
+export const Context14=React.createContext();
+
+export const Context15=React.createContext();
+
+
+export const Context16=React.createContext();
+
+
 function Canvas3(props) {
   const [showdisplay, setShowdisplay] = useState(false);
   const canvasRef = useRef();
   const canvas2Ref = useRef();
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(shirt_2d);
   const [decal_selected, setDecal_selected] = useState(false);
-  const [decalPosition, setDecalPosition] = useState([0, 0.04, 0.15]);
+  
+
+  const [decalPosition, setDecalPosition] = useState([]);
+
+
   const [text_selected, setText_selected] = useState(false);
   const [color_text, setColor_text] = useState("white");
   const [text, setText] = useState("hello");
@@ -48,13 +69,20 @@ function Canvas3(props) {
   const [text_pos, setText_pos] = useState([0, 0.04, 0.15]);
   const [dlt, setDlt] = useState(false);
   const [material, setMaterial] = useState("cotton");
-  const [image5, setImage5] = useState(null);
+  const [front_image, setFront_image] = useState([]);
+
+
+  const [back_image, setBack_image] = useState([]);
+  const [right_image, setRight_image] = useState([]);
+  const [left_image, setLeft_image] = useState([]);
+
+
   const[model_image_position,setModel_image_position]=useState(null)
   const [items, setItems] = useState({});
 const[backend_image,setBackend_image]=useState(null)
 const[model_image,setModel_image]=useState(null)
 
-
+const[tshirt_image_side,setTshirt_image_side]=useState("front_side")
 
 
 
@@ -111,13 +139,13 @@ const[model_image,setModel_image]=useState(null)
                 <Context5.Provider value={[material, setMaterial]}>
                   <Context6.Provider value={[image2, setImage2]}>
                     <Context7.Provider value={[image3, setImage3]}>
-                      <Context8.Provider value={[image5, setImage5]}>
+                      <Context8.Provider value={[front_image, setFront_image]}>
                         <Context9.Provider value={[decalPosition,setDecalPosition]}>
                         <Context10.Provider value={[model_image,setModel_image]}>
                           <Context11.Provider value={[model_image_position,setModel_image_position]}>
-
-                        
-                        {!showdisplay && (
+                          <Context12.Provider value={[tshirt_image_side,setTshirt_image_side]}>
+                          <Context13.Provider value={[back_image, setBack_image]}>
+                        {showdisplay && (
                           <div className={style.app}>
                             <div className={style.canvas_style} style={{ width: "50vw", height: "50vh" }}>
                             <Canvas
@@ -128,6 +156,14 @@ const[model_image,setModel_image]=useState(null)
   ref={canvasRef}
   onMouseMove={decal_selected ? handleCanvasMouseMove : text_selected ? handleMouseMove : null}
   onMouseUp={decal_selected ? handleCanvasMouseUp : text_selected ? handleMouseDown3 : null}
+
+
+         style={{
+            backgroundColor: '#111a21',
+            
+         }}
+
+
 >
   <PresentationControls
     speed={1.5}
@@ -160,27 +196,42 @@ const[model_image,setModel_image]=useState(null)
     />
     <ambientLight />
     <Suspense fallback={null}>
-      <Stage environment="city" intensity={0.6} castShadow={false}>
-        <Shirt
-          color={color}
-          position={decalPosition}
-          image={image5}
-          text={text}
-          text_position={model_image_position}
-          color_text={color_text}
-          material={material}
-          image2={model_image}
-          delete={dlt}
-        />
-      </Stage>
+     <Stage environment="city" intensity={0.6} castShadow={false}> 
+   
+
+     <New_shirt2
+   color={color}
+   front_image={front_image}
+back_image={back_image}
+
+   position1={decalPosition}
+   image_side={tshirt_image_side}
+/>
+
+        </Stage> 
     </Suspense>
-    <pointLight position={[15, 25, 15]} /> {/* Adjusted Y-coordinate */}
+    <pointLight position={[15, 25, 15]} />
     <OrbitControls enableDamping={true} dampingFactor={0.1} />
   </PresentationControls>
 </Canvas>
 
+
+<div>
+
+{/* image5.map((imageUrl,index)=>(
+
+
+  <img key={index} src={imageUrl}   alt={`Image ${index}`}/>
+
+
+
+)) */}
+
+</div>
+
+
                               <div className={style.customization}>
-                                <div></div>
+                              
                                 <div className={style.color_container}>
                                   <h2 className={style.shirt_color}>shirt color</h2>
                                   <input type="button" className={style.shirt} onClick={(e) => setColor("yellow")} />
@@ -194,7 +245,10 @@ const[model_image,setModel_image]=useState(null)
                                   <input type="button" id="mesh" name="vest" className={style.shirt7} onClick={(e) => setColor("white")} />
                                 </div>
                                  {/*  <button onClick={(e) => setDlt((prevState) => !prevState)}>Hide</button> */}
-                                <Material_input  />
+                              
+                              
+                              {/* 
+                                <Material_input  /> */}
                                 <div className={style.upload}>
                                { /*  <Upload delete={dlt} update={setDlt} />  */}
                                 </div>
@@ -204,12 +258,11 @@ const[model_image,setModel_image]=useState(null)
                         )}
                      
                         <button onClick={() => setShowdisplay(prevState => !prevState)} className={style.button}>convert 3d</button> 
-                        {/*!showdisplay && (
-                          <Tshirt_2d />
-                        )*/}
-
-
-
+                        {!showdisplay && (
+                          <CanvasImageUploader/>
+                        )}
+</Context13.Provider>
+</Context12.Provider>
                         </Context11.Provider>
                         </Context10.Provider>
                         </Context9.Provider>

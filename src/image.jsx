@@ -18,6 +18,13 @@ function ImageBackend() {
   };
 
 
+  const imageList = images.map((image, index) => ({
+    src: `data:image/${image.img.contentType};base64,${Buffer.from(image.img.data).toString('base64')}`,
+    alt: `Image ${index}`,
+    name: image.name,
+    desc: image.desc
+  }));
+
 
   console.log(imageList)
   return (

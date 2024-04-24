@@ -1,6 +1,6 @@
 /* Adjustments to .shirt_2d class */
 .shirt_2d {
-    background-color: rgb(80, 79, 79);
+    background-color:  rgb(158, 156, 156);
     width: 100vw;
     height: 100vh;
     overflow-x: hidden; /* Prevent horizontal overflow */

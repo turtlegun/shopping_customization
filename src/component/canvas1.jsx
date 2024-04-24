@@ -4,6 +4,7 @@ import { OrbitControls, ContactShadows, Environment } from '@react-three/drei';
 import React, { Suspense, useState } from 'react';
 import Shirt_vest from '../../public/Shirt_and_vest-processed';
 
+import poncho from '../../public/Poncho';
 
 import styles from './canvas1.module.css';
 

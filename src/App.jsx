@@ -18,6 +18,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import CanvasDownload2 from './component/circle';
 import ImageRotator from './component/triangle';
 import Image_backend from './image';
+import CanvasImageUploader from './texting_2d_canvas';
 
 const ImageContext = createContext();
 
@@ -53,6 +54,7 @@ useEffect(()=>{
           <Route exact path="/circle" element={<CanvasDownload2/>} />
           <Route exact path="/rotation" element={<ImageRotator/>} />
           <Route exact path="/backend" element={<Image_backend/>} />
+          <Route exact path="/testing" element={<CanvasImageUploader/>} />
           
           
 
