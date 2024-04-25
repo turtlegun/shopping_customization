@@ -16,6 +16,7 @@ import axios from 'axios';
 
 import New_shirt from "../../public/Leander_tshirt"
 import CanvasImageUploader from "../texting_2d_canvas";
+import CanvasImageUploader2 from "../text2_2d";
 
 export const Context = React.createContext();
 export const Context1 = React.createContext();

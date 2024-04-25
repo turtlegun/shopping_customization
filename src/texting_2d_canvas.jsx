@@ -13,6 +13,10 @@ import logo from './assets/Upload-icon.svg'
 
 
 function CanvasImageUploader() {
+
+
+  const [updateXValue, setUpdateXValue] = useState(-0.15);
+  const [updateYValue, setUpdateYValue] = useState(0.15);
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [dragStartX, setDragStartX] = useState(0);
@@ -129,7 +133,26 @@ const[tshirt_image_side,setTshirt_image_side]=useContext(Context12)
 
   };
 
-  const updateImagePosition = (index, newX, newY, updatedX, updatedY) => {
+
+
+  const incrementUpdateX = () => {
+    if (selectedImage) {
+      const updatedImages = images.map((img) => {
+        if (img === selectedImage) {
+          return {
+            ...img,
+            x: img.x + 5, // Adjust the increment value as needed
+          };
+        }
+        return img;
+      });
+  
+      setImages(updatedImages);
+      redrawCanvas();
+    }
+  };
+
+  const updateImagePosition = (index, newX, newY) => {
     setImages((prevImages) => {
       const updatedImages = [...prevImages];
   
@@ -148,8 +171,8 @@ const[tshirt_image_side,setTshirt_image_side]=useContext(Context12)
     setDecalPosition((prevDecalPosition) => {
       const updatedDecalPosition = [...prevDecalPosition];
       updatedDecalPosition[index] = { 
-        x: updatedX, 
-        y: updatedY, 
+        x: updateXValue, 
+        y: updateYValue, 
         z: prevDecalPosition[index]?.z || 0.15 
       };
       setDecalPosition(updatedDecalPosition);
@@ -171,9 +194,11 @@ const[tshirt_image_side,setTshirt_image_side]=useContext(Context12)
       context.drawImage(image, x, y, width, height);
 
       const rect = canvasRef.current.getBoundingClientRect();
-      let updatedX = -0.15
+      
+   //   let updatedX = -0.15
+   
 
-console.log(x)
+console.log(`the update x is ${updateXValue}`)
 
 
 
@@ -182,11 +207,13 @@ console.log(x)
      // updatedX = Math.min(0.12005912, Math.max(-0.2029292, updatedX));
 
  
-      let updatedY = 0.15
+   
     
 
      // console.log(`the y update is ${updatedY}`)
-      updateImagePosition(index, x, y,updatedX,updatedY);
+     // updateImagePosition(index, x, y,updatedX,updatedY);
+  //   updateXValue
+     updateImagePosition(index, x, y)//, updateXValue,updatedY);
     });
   };
 
@@ -222,8 +249,22 @@ console.log(x)
       const offsetX = event.clientX - rect.left;
       const offsetY = event.clientY - rect.top;
 
+
+console.log(` this is offset ${offsetX}`)
+console.log(` this is react-left ${rect.left}`)
+console.log(` this is width ${rect.widht}`)
+
+
       selectedImage.x = offsetX - dragStartX;
       selectedImage.y = offsetY - dragStartY;
+      const newUpdateXValue = ((offsetX - rect.left) / rect.width)
+      
+
+     setUpdateXValue(newUpdateXValue);
+  
+      // Update the y value dynamically based on mouse movement
+      const newUpdateYValue = (offsetY - rect.top) / rect.height - 1.5;
+      setUpdateYValue(newUpdateYValue);
 
       redrawCanvas();
     }
@@ -274,12 +315,12 @@ const back_image=()=>{
 
 
 
-  return (
+  return (<>
     <div className={style.t2d_whole}>
       <div className={style.canvas_style}>
         <canvas
           ref={canvasRef}
-          width={310}
+          width={390}
           height={350}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
@@ -308,6 +349,9 @@ const back_image=()=>{
        
 
 
+
+
+
 <div className={style.choose_position}>
 
 <img src={tshirtImage} alt='front image' className={style.front_image} onClick={front_image}/>
@@ -327,10 +371,27 @@ const back_image=()=>{
                 <b className={style.font_left_side}  >Left side </b>
 </div>
 
+
+
+
       </div>
+ 
+    
 
-
+ 
     </div>
+
+
+    <div>
+          <button onClick={() => setImages([])} className={style.delete_all_button}>
+            Delete All
+          </button>
+        </div>
+
+  <button onClick={incrementUpdateX} className={style.update_button}>
+          Increment X
+        </button>
+    </>   
   );
 }
 

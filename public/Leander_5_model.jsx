@@ -30,11 +30,11 @@ let side=props.image_side
 
 console.log(side)
 
-  useFrame(() => {
+{/*   useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.05;
     }
-  });
+  }); */}
 
 
   useControls({
@@ -70,7 +70,7 @@ useControls({
 
   return (
     <group {...props} dispose={null}>
-       <mesh ref={meshRef}>
+      <mesh ref={meshRef}>
       <mesh geometry={nodes.T_Shirt_Front.geometry} material={materials.Front_Shader_1} >
         
       {
