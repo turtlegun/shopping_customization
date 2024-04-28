@@ -1,3 +1,4 @@
+
 import { useContext, useRef, useState } from 'react';
 import style from './canvas3.module.css'
 import logo_input from "../assets/Upload-icon.svg";
@@ -146,5 +147,6 @@ setText(e.target.value)
      
      );
 }
+
 
 export default Upload;

@@ -85,3 +85,5 @@ if(select_value==='option1'){
 }
 
 useGLTF.preload('/shirt_and_vest-processed.glb');
+
+

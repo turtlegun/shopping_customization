@@ -243,3 +243,4 @@ let texture=useTexture(goku)
 }
 
 useGLTF.preload('/shirt.glb');
+
