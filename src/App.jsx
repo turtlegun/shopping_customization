@@ -20,6 +20,7 @@ import ImageRotator from './component/triangle';
 import Image_backend from './image';
 import CanvasImageUploader from './texting_2d_canvas';
 import CanvasImageUploader2 from './text2_2d';
+import Model_save from './component/model_save';
 
 const ImageContext = createContext();
 
@@ -57,6 +58,7 @@ useEffect(()=>{
           <Route exact path="/backend" element={<Image_backend/>} />
           <Route exact path="/testing" element={<CanvasImageUploader/>} />
           <Route exact path="/testing2" element={<CanvasImageUploader2/>} />
+          <Route exact path="/model_save" element={<Model_save/>} />
           
           
 

@@ -19,6 +19,8 @@ import New_shirt from "../../public/Leander_tshirt"
 import CanvasImageUploader from "../texting_2d_canvas";
 
 
+import New_shirt3 from '../../public/Leander_6_model'
+
 import Model_choose from "./models_choose";
 
 export const Context = React.createContext();
@@ -102,7 +104,7 @@ const[back_position,setBack_position]=useState([])
 
 
 
-
+{/*
 
   const handleCanvasMouseMove = (event) => {
     if (!decal_selected || !canvasRef.current) return;
@@ -123,7 +125,7 @@ const[back_position,setBack_position]=useState([])
     console.log(`updatedy`,updatedY)
    /* setDecalPosition([-0.03949999999999996, -0.1005912, decalPosition[2]]); */
   };
-
+{/* 
   const handleCanvasMouseUp = () => {
     setDecal_selected(false);
   };
@@ -142,7 +144,7 @@ const[back_position,setBack_position]=useState([])
     setText_pos([updatedX, updatedY, text_pos[2]]);
   };
 
-
+*/}
 
   return (
     <>
@@ -233,7 +235,7 @@ const[back_position,setBack_position]=useState([])
        
        {model_choose === 'Tshirt' && (
         <>
-      <New_shirt2
+      <New_shirt3 
         color={color}
         material={material}
         front_image={front_image}
