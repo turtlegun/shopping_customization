@@ -7,7 +7,17 @@ export default defineConfig({
 
 
   server: {
-    // Configure MIME types
+    
+    host:true,
+
+    strictPort:true,
+    port:3000,
+
+    watch: {
+      usePolling: true
+    },
+
+    
     mimeTypes: {
       // GLTF files
       'model/gltf+json': ['gltf'],

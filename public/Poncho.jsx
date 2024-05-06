@@ -44,7 +44,7 @@ export default function Model(props) {
 
   const fetchImages = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/send_image');
+      const response = await axios.get('http://localhost:5000/send_image');
       setImages(response.data);
     } catch (error) {
       console.error('Error fetching images:', error);

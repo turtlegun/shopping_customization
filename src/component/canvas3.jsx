@@ -10,6 +10,10 @@ import shirt_2d from '../2d_t-shirt.png';
 import { useImage } from "../App";
 import Tshirt_2d from "../tshirt_2d";
 
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+
+import shirt from '../../public/Shirt.jsx'
+
 import New_shirt2 from '../../public/Leander_5_model'
 
 import axios from 'axios';
@@ -63,7 +67,7 @@ export const Context19=React.createContext();
 
 function Canvas3(props) {
   const [showdisplay, setShowdisplay] = useState(false);
-  const canvasRef = useRef();
+  const canvasRef = useRef(null);
   const canvas2Ref = useRef();
   const [image, setImage] = useState([]);
   const [image2, setImage2] = useState(null);
@@ -101,6 +105,13 @@ const[tshirt_image_side,setTshirt_image_side]=useState("front_side")
 
 
 const[back_position,setBack_position]=useState([])
+
+
+
+const [canvasScene, setCanvasScene] = useState(null);
+
+
+const[save_count,setSave_count]=useState(0)
 
 
 
@@ -146,6 +157,40 @@ const[back_position,setBack_position]=useState([])
 
 */}
 
+let modelCounter = 5; // Initialize a counter variable
+
+const handleSaveClick = async () => {
+  if (canvasScene) {
+    const exporter = new GLTFExporter();
+    exporter.parse(canvasScene, async function (gltf) {
+      const blob1 = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
+      const formData = new FormData();
+      formData.append('model', blob1, `model${modelCounter}.gltf`); // Use the counter in the filename
+      try {
+        const response = await fetch('http://localhost:5000/upload_file', {
+          method: 'POST',
+          body: formData,
+        });
+        if (response.ok) {
+          console.log('Model uploaded successfully');
+          modelCounter++; // Increment the counter for the next filename
+        } else {
+          console.error('Error uploading model:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error uploading model:', error);
+      }
+    });
+  } else {
+    console.error('Error: Unable to export model. Canvas scene is not available.');
+  }
+};
+
+
+
+
+
+
   return (
     <>
       <Context.Provider value={[image, setImage]}>
@@ -168,12 +213,14 @@ const[back_position,setBack_position]=useState([])
                         {showdisplay && (
                           <div className={style.app}>
                             <div className={style.canvas_style} style={{ width: "50vw", height: "50vh" }}>
-                            <Canvas
+                     <Canvas 
+                            ref={canvasRef} 
+                            onCreated={({ gl, scene }) => setCanvasScene(scene)}
   size={['2000px', '3000px']}
   className={style.canvas}
   width={500}
   height={1000}
-  ref={canvasRef}
+  
   onMouseMove={decal_selected ? handleCanvasMouseMove : text_selected ? handleMouseMove : null}
   onMouseUp={decal_selected ? handleCanvasMouseUp : text_selected ? handleMouseDown3 : null}
 
@@ -216,11 +263,11 @@ const[back_position,setBack_position]=useState([])
     />
     <ambientLight />
     <Suspense fallback={null}>
-     <Stage environment="city" intensity={0.6} castShadow={false}> 
+      <Stage environment="city" intensity={0.6} castShadow={false}> 
    
      {model_choose === 'Skirt' && (
   <>
-    <Poncho
+ <Poncho
       color={color}
       material={material}
       front_image={front_image}
@@ -228,23 +275,27 @@ const[back_position,setBack_position]=useState([])
       position1={decalPosition}
       image_side={tshirt_image_side}
       part_selected={part_selected}
-    />
+    />  
     {console.log("model set is Skirt")}
   </>
 )}
        
        {model_choose === 'Tshirt' && (
         <>
-      <New_shirt3 
-        color={color}
+
+
+
+     <New_shirt2
+       color={color}
         material={material}
         front_image={front_image}
         back_image={back_image}
         position1={decalPosition}
         image_side={tshirt_image_side}
         back_position={back_position}
+  
       />
-  {console.log("model set is Tshirt")}
+{console.log("model set is Tshirt")}
   
 </>
     )}
@@ -259,7 +310,32 @@ const[back_position,setBack_position]=useState([])
     <pointLight position={[15, 25, 15]} />
     <OrbitControls enableDamping={true} dampingFactor={0.1} />
   </PresentationControls>
-</Canvas>
+  </Canvas> 
+
+
+  <Canvas
+    ref={canvasRef}
+    onCreated={({ gl, scene }) => setCanvasScene(scene)}
+    style={{ position: 'relative', top: 0, left: 0, width: '100%', height: '100%',  visibility: 'hidden' }}
+  >
+    {/* Your 3D scene components */}
+    {/* For example, you can add lights, camera, etc. */}
+    
+    {/* Render the shirt */}
+    <New_shirt2
+      color={color}
+      material={material}
+      front_image={front_image}
+      back_image={back_image}
+      position1={decalPosition}
+      image_side={tshirt_image_side}
+      back_position={back_position} 
+    />
+  </Canvas>
+
+
+
+
 
 
 <div>
@@ -306,6 +382,7 @@ const[back_position,setBack_position]=useState([])
 <div>
 <Model_choose/>
 
+
 </div>
 
                      
@@ -313,6 +390,9 @@ const[back_position,setBack_position]=useState([])
                          {!showdisplay && (
                           <CanvasImageUploader/>
                         )}
+
+<button onClick={handleSaveClick}>Save Model</button>
+
                         </Context19.Provider>
 </Context18.Provider>
 </Context17.Provider>

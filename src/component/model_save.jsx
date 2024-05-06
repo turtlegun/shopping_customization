@@ -18,7 +18,7 @@ const Model_save = () => {
         formData.append('model', blob1, 'model1.gltf');
       
         try {
-          const response = await fetch('http://localhost:3001/upload', {
+          const response = await fetch('http://localhost:5000/upload_file', {
             method: 'POST',
             body: formData,
           });

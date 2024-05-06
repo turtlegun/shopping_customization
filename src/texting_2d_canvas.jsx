@@ -54,7 +54,7 @@ const[tshirt_image_side,setTshirt_image_side]=useContext(Context12)
     tshirtImg.src = image_side;
   }, [image_side,tshirtImageLoaded,image_height_size]);
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async(event) => {
    
    if(tshirt_image_side=='front_side'){
    
@@ -125,7 +125,29 @@ const[tshirt_image_side,setTshirt_image_side]=useContext(Context12)
       };
 
       reader.readAsDataURL(file);
+      const formData = new FormData();
+
+
+
+
+
+
+      
     }
+  }
+  const formData = new FormData();
+  try {
+    const response = await fetch('http://localhost:5000/upload_images_frontend', {
+      method: 'POST',
+      body: formData,
+    });
+    if (response.ok) {
+      console.log('Images uploaded successfully');
+    } else {
+      console.error('Error uploading images:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error uploading images:', error);
   }
 
 
